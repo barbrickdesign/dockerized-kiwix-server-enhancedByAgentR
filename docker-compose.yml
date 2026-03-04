@@ -1,0 +1,17 @@
+services:
+  kiwix:
+    build: .
+    image: kiwix-server:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./kiwix-data:/kiwix-data:ro
+    # Pass your ZIM filename(s) here, or use --library /kiwix-data/library.xml
+    command: ["wikipedia.zim"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
